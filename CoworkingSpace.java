@@ -1,4 +1,4 @@
-package Course.Coworking;
+
 
 public class CoworkingSpace {
 

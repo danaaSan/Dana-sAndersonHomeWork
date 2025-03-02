@@ -1,4 +1,3 @@
-package Course.Coworking;
 
 public class User {
 

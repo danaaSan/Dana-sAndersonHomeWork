@@ -1,11 +1,12 @@
-package Course.Coworking;
+
 
 import java.util.Scanner;
 
 public class Coworking {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CoworkingException {
         Scanner in = new Scanner(System.in);
         WorkspaceManagement management = new WorkspaceManagement();
+        management.loadSpacesFromFile();
         int choice = -1;
 
         while (choice != 0) {
@@ -41,7 +42,7 @@ public class Coworking {
                             System.out.println("Enter space id: ");
                             int spaceId = in.nextInt();
                             in.nextLine();
-                            management.removeCoworkingSpace(spaceId);
+                            management.removeSpace(spaceId);
                             break;
                         case 3:
                             management.bookingInfo();
@@ -98,6 +99,7 @@ public class Coworking {
                     }
                 }
             }else {
+                management.saveSpacesToFile();
                 break;
             }
         }
