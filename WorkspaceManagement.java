@@ -1,9 +1,6 @@
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class WorkspaceManagement {
 
@@ -22,10 +19,10 @@ public class WorkspaceManagement {
         coworkingSpaces.add(coworkingSpace);
         System.out.println("Space added successfully!");
     }
-    public void removeSpace(int id) throws CoworkingException {
+    public void removeSpace(int id) {
         boolean removed =coworkingSpaces.removeIf(space -> space.getSpaceId() == id);
         if (!removed) {
-            throw new CoworkingException("Error: No coworking space found with ID " + id);
+            System.out.println("Coworking space with ID " + id + " removed successfully.");
         } else {
             System.out.println("Coworking space with ID " + id + " removed successfully.");
         }
@@ -37,11 +34,10 @@ public class WorkspaceManagement {
         }
     }
     public void availableSpacesInfo(){
-        for (CoworkingSpace coworkingSpace: coworkingSpaces) {
-            if(coworkingSpace.isAvailable()) {
-                System.out.println(coworkingSpace.toString());
-            }
-        }
+        coworkingSpaces.stream()
+                .filter(CoworkingSpace::isAvailable)
+                .forEach(System.out::println);
+
     }
 
     public void bookingSpace(String customerName, int spaceId, String date, String time) {
@@ -52,33 +48,32 @@ public class WorkspaceManagement {
             }
         }
     }
-    public void cancelBooking(int bookingId){
-        Iterator<Booking> iterator = bookings.iterator();
-        while (iterator.hasNext()) {
-            Booking booking = iterator.next();
-            if (booking.getBookingId() == bookingId) {
-                iterator.remove(); // Безопасное удаление через итератор
-                System.out.println("Booking cancelled successfully.");
-                for (CoworkingSpace coworkingSpace : coworkingSpaces) {
-                    if (coworkingSpace.getSpaceId() == booking.getSpaceId()) {
-                        coworkingSpace.setAvailable(true);
-                    }
-                }
-                return; // Прерываем выполнение, так как бронирование найдено и удалено
-            }
-        }
+    public void cancelBooking(int bookingId) {
+        Optional<Booking> bookingToCancel = bookings.stream()
+                .filter(booking -> booking.getBookingId() == bookingId)
+                .findFirst();
+
+        bookingToCancel.ifPresentOrElse(booking -> {
+            bookings.remove(booking);
+            coworkingSpaces.stream()
+                    .filter(space -> space.getSpaceId() == booking.getSpaceId())
+                    .findFirst()
+                    .ifPresent(space -> space.setAvailable(true));
+
+            System.out.println("Booking cancelled successfully.");
+        }, () -> System.out.println("Booking with ID " + bookingId + " not found."));
     }
+
     public  void bookingInfo(){
         for (Booking booking:bookings) {
             System.out.println(booking.toString());
         }
     }
     public void customersBooking(String name){
-        for (Booking booking:bookings) {
-            if (booking.getCustomerName().equalsIgnoreCase(name)){
-                System.out.println(booking.toString());
-            }
-        }
+        bookings.stream()
+                .filter(booking -> booking.getCustomerName().equalsIgnoreCase(name))
+                .forEach(System.out::println);
+
     }
 
     public void saveSpacesToFile() {

@@ -3,105 +3,112 @@
 import java.util.Scanner;
 
 public class Coworking {
-    public static void main(String[] args) throws CoworkingException {
-        Scanner in = new Scanner(System.in);
-        WorkspaceManagement management = new WorkspaceManagement();
+    private static Scanner in = new Scanner(System.in);
+    private static WorkspaceManagement management = new WorkspaceManagement();
+
+    public static void main(String[] args) {
         management.loadSpacesFromFile();
-        int choice = -1;
+        int choice;
 
-        while (choice != 0) {
-            System.out.println("Welcome to the Coworking");
-            System.out.println("Login please");
-            System.out.println("1. Admin Login");
-            System.out.println("2. User Login");
-            System.out.println("0. Exit");
-
-            choice = in.nextInt();
-
-            if (choice == 1) {
-                int adminChoice = -1;
-                while (adminChoice !=0) {
-                    System.out.println("Admin Menu");
-                    System.out.println("1. Add a new coworking space");
-                    System.out.println("2. Remove a coworking space");
-                    System.out.println("3. View all reservations");
-                    System.out.println("4. View all spaces");
-                    System.out.println("0. Exit");
-
-                    adminChoice = in.nextInt();
-
-                    switch (adminChoice){
-                        case 1:
-                            System.out.println("Enter space Type: ");
-                            String type = in.next();
-                            System.out.println("Enter Price: ");
-                            double price = in.nextDouble();
-                            management.addCoworkingSpace(type, price);
-                            break;
-                        case 2:
-                            System.out.println("Enter space id: ");
-                            int spaceId = in.nextInt();
-                            in.nextLine();
-                            management.removeSpace(spaceId);
-                            break;
-                        case 3:
-                            management.bookingInfo();
-                            break;
-                        case 4:
-                            management.spacesInfo();
-                            break;
-                        case 0:
-                            break;
-                        default:
-                            throw new IllegalStateException("Unexpected value: " + adminChoice);
-                    }
+        do {
+            choice = showMainMenu();
+            switch (choice) {
+                case 1 -> adminMenu();
+                case 2 -> customerMenu();
+                case 0 -> {
+                    System.out.println("Saving data and exiting...");
+                    management.saveSpacesToFile();
                 }
-            } else if (choice == 2) {
-                int customerChoice = -1;
-                while (customerChoice !=0) {
-                    System.out.println("Customer Menu");
-                    System.out.println("1. View Available Spaces");
-                    System.out.println("2. Make reservation");
-                    System.out.println("3. View My reservations");
-                    System.out.println("4. Cancel reservation");
-                    System.out.println("0. Exit");
-
-                    customerChoice = in.nextInt();
-
-                    switch (customerChoice){
-                        case 1:
-                            management.availableSpacesInfo();
-                            break;
-                        case 2:
-                            System.out.println("Enter Name, Workspace ID, Date, Time:");
-                            String name = in.next();
-                            int workspaceId = in.nextInt();
-                            in.nextLine();
-                            String date = in.next();
-                            String time = in.next();
-                            management.bookingSpace(name, workspaceId, date, time);
-                            break;
-                        case 3:
-                            System.out.println("Enter Name");
-                            name = in.next();
-                            management.customersBooking(name);
-                            break;
-                        case 4:
-                            System.out.println("Enter Reservation ID to Cancel:");
-                            int resId = in.nextInt();
-                            in.nextLine();
-                            management.cancelBooking(resId);
-                            break;
-                        case 0:
-                            break;
-                        default:
-                            throw new IllegalStateException("Unexpected value: " +  customerChoice);
-                    }
-                }
-            }else {
-                management.saveSpacesToFile();
-                break;
+                default -> System.out.println("Invalid choice! Please try again.");
             }
-        }
+        } while (choice != 0);
+    }
+
+    private static int showMainMenu() {
+        System.out.println("Welcome to the Coworking");
+        System.out.println("Login please");
+        System.out.println("1. Admin Login");
+        System.out.println("2. User Login");
+        System.out.println("0. Exit");
+        return in.nextInt();
+    }
+
+    private static void adminMenu() {
+        int adminChoice;
+        do {
+            System.out.println("\nAdmin Menu");
+            System.out.println("1. Add a new coworking space");
+            System.out.println("2. Remove a coworking space");
+            System.out.println("3. View all reservations");
+            System.out.println("4. View all spaces");
+            System.out.println("0. Exit");
+            adminChoice = in.nextInt();
+
+            switch (adminChoice) {
+                case 1 -> addCoworkingSpace();
+                case 2 -> removeCoworkingSpace();
+                case 3 -> management.bookingInfo();
+                case 4 -> management.spacesInfo();
+                case 0 -> System.out.println("Returning to main menu...");
+                default -> System.out.println("Invalid choice! Please try again.");
+            }
+        } while (adminChoice != 0);
+    }
+
+    private static void addCoworkingSpace() {
+        System.out.println("Enter space Type: ");
+        String type = in.next();
+        System.out.println("Enter Price: ");
+        double price = in.nextDouble();
+        management.addCoworkingSpace(type, price);
+    }
+
+    private static void removeCoworkingSpace() {
+        System.out.println("Enter space id: ");
+        int spaceId = in.nextInt();
+        management.removeSpace(spaceId);
+    }
+
+    private static void customerMenu() {
+        int customerChoice;
+        do {
+            System.out.println("\nCustomer Menu");
+            System.out.println("1. View Available Spaces");
+            System.out.println("2. Make reservation");
+            System.out.println("3. View My reservations");
+            System.out.println("4. Cancel reservation");
+            System.out.println("0. Exit");
+            customerChoice = in.nextInt();
+
+            switch (customerChoice) {
+                case 1 -> management.availableSpacesInfo();
+                case 2 -> makeReservation();
+                case 3 -> viewMyReservations();
+                case 4 -> cancelReservation();
+                case 0 -> System.out.println("Returning to main menu...");
+                default -> System.out.println("Invalid choice! Please try again.");
+            }
+        } while (customerChoice != 0);
+    }
+
+    private static void makeReservation() {
+        System.out.println("Enter Name, Workspace ID, Date, Time:");
+        String name = in.next();
+        int workspaceId = in.nextInt();
+        String date = in.next();
+        String time = in.next();
+        management.bookingSpace(name, workspaceId, date, time);
+    }
+
+    private static void viewMyReservations() {
+        System.out.println("Enter Name");
+        String name = in.next();
+        management.customersBooking(name);
+    }
+
+    private static void cancelReservation() {
+        System.out.println("Enter Reservation ID to Cancel:");
+        int resId = in.nextInt();
+        management.cancelBooking(resId);
     }
 }
