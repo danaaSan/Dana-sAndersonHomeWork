@@ -1,4 +1,5 @@
 
+
 public class Booking {
     private int bookingId, spaceId;
     private String customerName, date, time;

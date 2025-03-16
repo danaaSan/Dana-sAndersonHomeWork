@@ -1,4 +1,5 @@
 
+
 import java.io.*;
 import java.util.*;
 
@@ -77,7 +78,7 @@ public class WorkspaceManagement {
     }
 
     public void saveSpacesToFile() {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("spaces.txt"))) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("src/main/java/spaces.txt"))) {
             for (CoworkingSpace space :coworkingSpaces) {
                 writer.println(space.getSpaceId() + "," + space.getType() + "," + space.getPrice() + "," + space.isAvailable());
             }
@@ -87,7 +88,7 @@ public class WorkspaceManagement {
     }
 
     public void loadSpacesFromFile() {
-        try (Scanner scanner = new Scanner(new File("spaces.txt"))) {
+        try (Scanner scanner = new Scanner(new File("src/main/java/spaces.txt"))) {
             while (scanner.hasNextLine()) {
                 String[] data = scanner.nextLine().split(",");
                 int id = Integer.parseInt(data[0]);
