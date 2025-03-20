@@ -113,4 +113,8 @@ public class WorkspaceManagement {
     public List<Booking> getBookings() {
         return bookings;
     }
+
+    public void setCoworkingSpaces(List<CoworkingSpace> coworkingSpaces) {
+        this.coworkingSpaces = coworkingSpaces;
+    }
 }
