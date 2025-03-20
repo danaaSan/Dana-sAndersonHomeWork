@@ -17,6 +17,7 @@ public class Coworking {
                 case 0 -> {
                     System.out.println("Saving data and exiting...");
                     management.saveSpacesToFile();
+                    in.close();
                 }
                 default -> System.out.println("Invalid choice! Please try again.");
             }
@@ -56,7 +57,8 @@ public class Coworking {
 
     private static void addCoworkingSpace() {
         System.out.println("Enter space Type: ");
-        String type = in.next();
+        in.nextLine();
+        String type = in.nextLine();
         System.out.println("Enter Price: ");
         double price = in.nextDouble();
         management.addCoworkingSpace(type, price);

@@ -21,19 +21,17 @@ public class WorkspaceManagement {
         System.out.println("Space added successfully!");
     }
     public void removeSpace(int id) {
-        boolean removed =coworkingSpaces.removeIf(space -> space.getSpaceId() == id);
-        if (!removed) {
+        if (coworkingSpaces.removeIf(space -> space.getSpaceId() == id)) {
             System.out.println("Coworking space with ID " + id + " removed successfully.");
         } else {
-            System.out.println("Coworking space with ID " + id + " removed successfully.");
+            System.out.println("Coworking space with ID " + id + " not found.");
         }
     }
 
-    public void spacesInfo(){
-        for (CoworkingSpace coworkingSpace: coworkingSpaces) {
-            System.out.println(coworkingSpace.toString());
-        }
+    public void spacesInfo() {
+        coworkingSpaces.forEach(System.out::println);
     }
+
     public void availableSpacesInfo(){
         coworkingSpaces.stream()
                 .filter(CoworkingSpace::isAvailable)
@@ -42,13 +40,17 @@ public class WorkspaceManagement {
     }
 
     public void bookingSpace(String customerName, int spaceId, String date, String time) {
-        for (CoworkingSpace coworkingSpace: coworkingSpaces){
-            if(coworkingSpace.getSpaceId()==spaceId && coworkingSpace.isAvailable()){
-                bookings.add(new Booking(reservationCounter++, spaceId, customerName,  date, time));
-                coworkingSpace.setAvailable(false);
-            }
-        }
+        Optional<CoworkingSpace> spaceOpt = coworkingSpaces.stream()
+                .filter(space -> space.getSpaceId() == spaceId && space.isAvailable())
+                .findFirst();
+
+        spaceOpt.ifPresentOrElse(space -> {
+            bookings.add(new Booking(reservationCounter++, spaceId, customerName, date, time));
+            space.setAvailable(false);
+            System.out.println("Booking successful!");
+        }, () -> System.out.println("Space ID " + spaceId + " is not available."));
     }
+
     public void cancelBooking(int bookingId) {
         Optional<Booking> bookingToCancel = bookings.stream()
                 .filter(booking -> booking.getBookingId() == bookingId)
@@ -65,16 +67,14 @@ public class WorkspaceManagement {
         }, () -> System.out.println("Booking with ID " + bookingId + " not found."));
     }
 
-    public  void bookingInfo(){
-        for (Booking booking:bookings) {
-            System.out.println(booking.toString());
-        }
+    public void bookingInfo() {
+        bookings.forEach(System.out::println);
     }
+
     public void customersBooking(String name){
         bookings.stream()
                 .filter(booking -> booking.getCustomerName().equalsIgnoreCase(name))
                 .forEach(System.out::println);
-
     }
 
     public void saveSpacesToFile() {
@@ -82,6 +82,7 @@ public class WorkspaceManagement {
             for (CoworkingSpace space :coworkingSpaces) {
                 writer.println(space.getSpaceId() + "," + space.getType() + "," + space.getPrice() + "," + space.isAvailable());
             }
+            System.out.println("Coworking spaces saved successfully.");
         } catch (IOException e) {
             System.out.println("Error saving coworking spaces: " + e.getMessage());
         }
@@ -89,19 +90,27 @@ public class WorkspaceManagement {
 
     public void loadSpacesFromFile() {
         try (Scanner scanner = new Scanner(new File("src/main/java/spaces.txt"))) {
+            int maxId = 0;
             while (scanner.hasNextLine()) {
                 String[] data = scanner.nextLine().split(",");
                 int id = Integer.parseInt(data[0]);
                 String type = data[1];
                 double price = Double.parseDouble(data[2]);
+                boolean available = Boolean.parseBoolean(data[3]);
                 coworkingSpaces.add(new CoworkingSpace(id, type, price));
+                if (id > maxId) maxId = id;
             }
+            spaceCounter = maxId + 1; // Обновляем счётчик ID
         } catch (FileNotFoundException e) {
             System.out.println("No saved data found, starting fresh.");
         }
     }
 
+    public List<CoworkingSpace> getCoworkingSpaces() {
+        return coworkingSpaces;
+    }
 
-
-
+    public List<Booking> getBookings() {
+        return bookings;
+    }
 }
