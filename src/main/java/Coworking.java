@@ -53,7 +53,7 @@ public class Coworking {
                 case 0 -> System.out.println("Returning to main menu...");
                 default -> System.out.println("Invalid choice! Please try again.");
             }
-        } while (adminChoice != 0);
+        } while (adminChoice != 0); 
     }
 
     private static void addCoworkingSpace() throws SQLException {

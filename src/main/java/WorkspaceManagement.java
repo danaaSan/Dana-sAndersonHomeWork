@@ -155,7 +155,7 @@ public class WorkspaceManagement {
             System.out.println("--------------------------------------------------");
 
         } catch (SQLException e) {
-            System.out.println(" Error retrieving coworking spaces: " + e.getMessage());
+            System.out.println(" Error retrieving spaces: " + e.getMessage());
         }
     }
 

@@ -52,7 +52,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!--PostgreSql-->
+        <!--PostgreSqll-->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
