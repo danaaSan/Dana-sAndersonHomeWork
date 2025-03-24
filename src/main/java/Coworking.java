@@ -1,11 +1,12 @@
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Coworking {
     private static Scanner in = new Scanner(System.in);
     private static WorkspaceManagement management = new WorkspaceManagement();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         management.loadSpacesFromFile();
         int choice;
 
@@ -33,7 +34,7 @@ public class Coworking {
         return in.nextInt();
     }
 
-    private static void adminMenu() {
+    private static void adminMenu() throws SQLException {
         int adminChoice;
         do {
             System.out.println("\nAdmin Menu");
@@ -55,7 +56,7 @@ public class Coworking {
         } while (adminChoice != 0);
     }
 
-    private static void addCoworkingSpace() {
+    private static void addCoworkingSpace() throws SQLException {
         System.out.println("Enter space Type: ");
         in.nextLine();
         String type = in.nextLine();
@@ -64,7 +65,7 @@ public class Coworking {
         management.addCoworkingSpace(type, price);
     }
 
-    private static void removeCoworkingSpace() {
+    private static void removeCoworkingSpace()  {
         System.out.println("Enter space id: ");
         int spaceId = in.nextInt();
         management.removeSpace(spaceId);

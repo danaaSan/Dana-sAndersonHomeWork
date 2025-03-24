@@ -5,6 +5,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class TestWorkspaceManagement {
 
 
     @Test
-    public void testAddSpace(){
+    public void testAddSpace() throws SQLException {
 
         workspaceManagement.addCoworkingSpace("open", 50);
         List<CoworkingSpace> coworkingSpaces = workspaceManagement.getCoworkingSpaces();
@@ -33,7 +34,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testAutoIncrementOfSpaceID(){
+    public void testAutoIncrementOfSpaceID() throws SQLException {
 
         workspaceManagement.addCoworkingSpace("open", 50);
         workspaceManagement.addCoworkingSpace("close", 60);
@@ -46,7 +47,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testSpaceRemovedSuccessfully(){
+    public void testSpaceRemovedSuccessfully() throws SQLException {
 
         workspaceManagement.addCoworkingSpace("open", 50);
 
@@ -57,7 +58,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testSpaceIsNotRemoved(){
+    public void testSpaceIsNotRemoved() throws SQLException {
 
         workspaceManagement.addCoworkingSpace("open", 50);
 
@@ -68,7 +69,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testIsAvailable(){
+    public void testIsAvailable() throws SQLException {
         // Arrange
         workspaceManagement.addCoworkingSpace("open", 50);
         workspaceManagement.addCoworkingSpace("close", 60);
@@ -89,7 +90,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testBookingSuccessfully(){
+    public void testBookingSuccessfully() throws SQLException {
         // Arrange
         workspaceManagement.addCoworkingSpace("open", 50);
         int spaceId = workspaceManagement.getCoworkingSpaces().get(0).getSpaceId();
@@ -107,7 +108,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testBookingFailed(){
+    public void testBookingFailed() throws SQLException {
         // Arrange
         workspaceManagement.addCoworkingSpace("open", 50);
         int spaceId = workspaceManagement.getCoworkingSpaces().get(0).getSpaceId();
@@ -121,7 +122,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testAutoIncrementOfBookingID(){
+    public void testAutoIncrementOfBookingID() throws SQLException {
 
         workspaceManagement.addCoworkingSpace("open", 50);
         workspaceManagement.addCoworkingSpace("close", 60);
@@ -139,7 +140,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testChangingAvailabilityStatusAfterBooking(){
+    public void testChangingAvailabilityStatusAfterBooking() throws SQLException {
         // Arrange
         workspaceManagement.addCoworkingSpace("open", 50);
         int spaceId = workspaceManagement.getCoworkingSpaces().get(0).getSpaceId();
@@ -151,7 +152,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testCancelBookingSuccessfully(){
+    public void testCancelBookingSuccessfully() throws SQLException {
         // Arrange
         workspaceManagement.addCoworkingSpace("open", 50);
         int spaceId = workspaceManagement.getCoworkingSpaces().get(0).getSpaceId();
@@ -165,7 +166,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testBookingIsNotCancelled(){
+    public void testBookingIsNotCancelled() throws SQLException {
         // Arrange
         workspaceManagement.addCoworkingSpace("open", 50);
         int spaceId = workspaceManagement.getCoworkingSpaces().get(0).getSpaceId();
@@ -180,7 +181,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testChangingAvailabilityStatusAfterCancelBooking(){
+    public void testChangingAvailabilityStatusAfterCancelBooking() throws SQLException {
         // Arrange
         workspaceManagement.addCoworkingSpace("open", 50);
         int spaceId = workspaceManagement.getCoworkingSpaces().get(0).getSpaceId();
@@ -193,7 +194,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testCustomersBookingExist(){
+    public void testCustomersBookingExist() throws SQLException {
 
         workspaceManagement.addCoworkingSpace("open", 50);
         workspaceManagement.addCoworkingSpace("close", 60);
@@ -218,7 +219,7 @@ public class TestWorkspaceManagement {
     }
 
     @Test
-    public void testCustomersBookingDoesNotExist(){
+    public void testCustomersBookingDoesNotExist() throws SQLException {
 
         workspaceManagement.addCoworkingSpace("open", 50);
         workspaceManagement.bookingSpace("Dana", 1, "2025-03-20", "10:00");

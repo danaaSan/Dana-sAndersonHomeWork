@@ -1,0 +1,29 @@
+
+CREATE TABLE coworking_space (
+    space_id SERIAL PRIMARY KEY,
+    price DECIMAL(10,2) NOT NULL,
+    type VARCHAR(50) NOT NULL CHECK (type IN ('close', 'open', 'dedicated desk', 'meeting room')),
+    is_available BOOLEAN NOT NULL
+);
+
+
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(50)  NOT NULL,
+    usersurname VARCHAR(50)  NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    role VARCHAR(20) NOT NULL CHECK (role IN ('Customer', 'Admin'))
+);
+
+
+CREATE TABLE booking (
+    booking_id SERIAL PRIMARY KEY,
+    space_id INT NOT NULL,
+    user_id INT NOT NULL,
+    booking_date DATE NOT NULL,
+    booking_time TIME NOT NULL,
+
+    CONSTRAINT fk_space FOREIGN KEY (space_id) REFERENCES coworking_space(space_id) ON DELETE CASCADE,
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);

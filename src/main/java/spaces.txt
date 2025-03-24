@@ -1,2 +1,1 @@
-1,Private Office,100.0,true
-2,Open Space,50.0,false
+1,close,100.0,true
