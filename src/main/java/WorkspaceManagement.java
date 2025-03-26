@@ -85,16 +85,16 @@ public class WorkspaceManagement {
             transaction.begin();
             CoworkingSpace coworkingSpace = entityManager.find(CoworkingSpace.class, spaceId);
             if (coworkingSpace == null) {
-                System.out.println("Коворкинг-пространство с ID " + spaceId + " не найдено.");
+                System.out.println("Space ID " + spaceId + " is no");
                 return;
             }
             if (!coworkingSpace.isAvailable()) {
-                System.out.println("Коворкинг-пространство с ID " + spaceId + " уже забронировано.");
+                System.out.println("Space ID " + spaceId + " is not available.");
                 return;
             }
             User user = entityManager.find(User.class, userId);
             if (user == null) {
-                System.out.println("Пользователь с ID " + userId + " не найден.");
+                System.out.println("User ID " + userId + " no found");
                 return;
             }
             Booking booking = new Booking(coworkingSpace, user, date, time);
@@ -102,7 +102,7 @@ public class WorkspaceManagement {
             coworkingSpace.setAvailable(false);
             entityManager.merge(coworkingSpace);
             transaction.commit();
-            System.out.println("Бронирование успешно создано!");
+            System.out.println("Success");
         }  catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -119,13 +119,12 @@ public class WorkspaceManagement {
             );
             query.setParameter("userId", userId);
 
-            // Получаем список бронирований
             List<Booking> bookings = query.getResultList();
 
             if (bookings.isEmpty()) {
-                System.out.println("У пользователя с ID " + userId + " нет бронирований.");
+                System.out.println("User with ID " + userId + "dont have booking");
             } else {
-                System.out.println("Бронирования пользователя с ID " + userId + ":");
+                System.out.println("Bookings: " + userId + ":");
                 for (Booking booking : bookings) {
                     System.out.println(booking);
                 }
@@ -156,20 +155,18 @@ public class WorkspaceManagement {
             transaction.begin();
             Booking booking = entityManager.find(Booking.class, bookingId);
             if (booking == null) {
-                System.out.println("Бронирование с ID " + bookingId + " не найдено.");
+                System.out.println("Booking ID " + bookingId + " not found");
                 return;
             }
 
-            // Освобождаем пространство
             CoworkingSpace coworkingSpace = booking.getCoworkingSpace();
             coworkingSpace.setAvailable(true);
             entityManager.merge(coworkingSpace);
 
-            // Удаляем бронирование
             entityManager.remove(booking);
 
             transaction.commit();
-            System.out.println("Бронирование успешно отменено!");
+            System.out.println("Success");
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
