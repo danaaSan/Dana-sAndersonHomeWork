@@ -1,5 +1,8 @@
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Coworking {
@@ -7,7 +10,6 @@ public class Coworking {
     private static WorkspaceManagement management = new WorkspaceManagement();
 
     public static void main(String[] args) throws SQLException {
-        management.loadSpacesFromFile();
         int choice;
 
         do {
@@ -16,8 +18,7 @@ public class Coworking {
                 case 1 -> adminMenu();
                 case 2 -> customerMenu();
                 case 0 -> {
-                    System.out.println("Saving data and exiting...");
-                    management.saveSpacesToFile();
+                    System.out.println("By");
                     in.close();
                 }
                 default -> System.out.println("Invalid choice! Please try again.");
@@ -42,6 +43,7 @@ public class Coworking {
             System.out.println("2. Remove a coworking space");
             System.out.println("3. View all reservations");
             System.out.println("4. View all spaces");
+            System.out.println("5. Add a new user");
             System.out.println("0. Exit");
             adminChoice = in.nextInt();
 
@@ -50,19 +52,32 @@ public class Coworking {
                 case 2 -> removeCoworkingSpace();
                 case 3 -> management.bookingInfo();
                 case 4 -> management.spacesInfo();
+                case 5 -> addNewUser();
                 case 0 -> System.out.println("Returning to main menu...");
                 default -> System.out.println("Invalid choice! Please try again.");
             }
         } while (adminChoice != 0); 
     }
 
-    private static void addCoworkingSpace() throws SQLException {
+    private static void addNewUser() {
+        System.out.println("Enter name: ");
+        String name = in.nextLine();
+        System.out.println("Enter surname: ");
+        String surname = in.nextLine();
+        System.out.println("Enter email: ");
+        String email = in.nextLine();
+        System.out.println("Enter user type: ");
+        String userType= in.nextLine();
+        management.addUser(name, surname, email, userType);
+    }
+
+    private static void addCoworkingSpace() {
         System.out.println("Enter space Type: ");
         in.nextLine();
         String type = in.nextLine();
         System.out.println("Enter Price: ");
         double price = in.nextDouble();
-        management.addCoworkingSpace(type, price);
+        management.addCoworkingSpace(SpaceType.valueOf(type), price);
     }
 
     private static void removeCoworkingSpace()  {
@@ -94,18 +109,18 @@ public class Coworking {
     }
 
     private static void makeReservation() {
-        System.out.println("Enter Name, Workspace ID, Date, Time:");
-        String name = in.next();
+        System.out.println("Enter User ID, Workspace ID, Date, Time:");
+        int userId = in.nextInt();
         int workspaceId = in.nextInt();
-        String date = in.next();
-        String time = in.next();
-        management.bookingSpace(name, workspaceId, date, time);
+        LocalDate date = LocalDate.parse(in.next());
+        LocalTime time = LocalTime.parse(in.next());
+        management.addBooking( workspaceId,userId, date, time);
     }
 
     private static void viewMyReservations() {
-        System.out.println("Enter Name");
-        String name = in.next();
-        management.customersBooking(name);
+        System.out.println("Enter User Id");
+        int userId = in.nextInt();
+        management.customersBooking(userId);
     }
 
     private static void cancelReservation() {

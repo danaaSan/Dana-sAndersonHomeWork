@@ -1,16 +1,29 @@
+import jakarta.persistence.*;
 
-
+@Entity
+@Table(name = "coworking_space")
 public class CoworkingSpace {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "space_id")
     private int spaceId;
+
+    @Column(name = "price", nullable = false)
     private double price;
-    private String type;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private SpaceType type;
+
+    @Column(name = "is_available", nullable = false)
     private boolean isAvailable;
 
-    public CoworkingSpace(int spaceId, String type, double price) {
-        this.spaceId = spaceId;
-        this.type = type;
+    public CoworkingSpace() {}
+
+    public CoworkingSpace(double price, SpaceType type) {
         this.price = price;
+        this.type = type;
         this.isAvailable = true;
     }
 
@@ -40,11 +53,11 @@ public class CoworkingSpace {
         this.price = price;
     }
 
-    public String getType() {
+    public SpaceType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(SpaceType type) {
         this.type = type;
     }
 
@@ -55,4 +68,6 @@ public class CoworkingSpace {
     public void setAvailable(boolean available) {
         isAvailable = available;
     }
+
 }
+

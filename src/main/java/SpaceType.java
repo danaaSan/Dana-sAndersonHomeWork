@@ -1,0 +1,3 @@
+enum SpaceType {
+    CLOSE, OPEN, DEDICATED_DESK, MEETING_ROOM
+}
